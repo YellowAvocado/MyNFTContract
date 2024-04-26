@@ -16,11 +16,19 @@ const signer = new ethers.Wallet(privateKey, provider);
 const contractAddress = process.env.CONTRACT_ADDRESS;
 const nftContract = new ethers.Contract(contractAddress, contract.abi, signer);
 
+console.log(JsonRpcProvider(process.env.JSON_RPC_URL));
+console.log(privateKey);
+
 app.post('/mint', async (req, res) => {
+
     const {address, tokenURI} = req.body;
 
-    if (!address || !tokenURI) {
-        return res.status(400).send('Missing address or tokenURI');
+    if (!tokenURI) {
+        return res.status(400).send('Missing tokenURI');
+    }
+
+    if (!address) {
+        return res.status(400).send('Missing address');
     }
 
     try {
