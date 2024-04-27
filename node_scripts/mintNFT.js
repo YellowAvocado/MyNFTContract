@@ -1,9 +1,12 @@
 const express = require('express')
+const bodyParser = require('body-parser')
 const { ethers, JsonRpcProvider } = require("ethers");
 require('dotenv').config()
 const contract = require("../artifacts/contracts/MyNFT.sol/MyNFT.json");
 
 const app = express();
+app.use(bodyParser.json())
+
 const port = 3000;
 
 app.use(express.json());
@@ -16,12 +19,10 @@ const signer = new ethers.Wallet(privateKey, provider);
 const contractAddress = process.env.CONTRACT_ADDRESS;
 const nftContract = new ethers.Contract(contractAddress, contract.abi, signer);
 
-console.log(JsonRpcProvider(process.env.JSON_RPC_URL));
-console.log(privateKey);
-
 app.post('/mint', async (req, res) => {
 
     const {address, tokenURI} = req.body;
+    console.log(req.body)
 
     if (!tokenURI) {
         return res.status(400).send('Missing tokenURI');
